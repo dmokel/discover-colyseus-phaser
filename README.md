@@ -1,4 +1,4 @@
-# @data-farmer/monorepo
+# @voidoor/monorepo
 
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 
@@ -18,18 +18,18 @@ pnpm run cz
 pnpm install
 # 安装monorepo root依赖，请注意，此时你还未安装各个apps/packages的依赖，
 # 因此你需要继续执行相关命令安装apps/pakcages的依赖，格式如下：
-pnpm --filter @data-farmer/{APP_NAME} install
-# 示例如：pnpm --filter @data-farmer/ex-http-graphql install
+pnpm --filter @voidoor/{APP_NAME} install
+# 示例如：pnpm --filter @voidoor/ex-http-graphql install
 
 # 你可以仅对你进行开发的apps/packages安装依赖，
 # 从而减少你本地所需要安装的依赖，和减少安装依赖所需的时间。
 ```
 
-# @data-farmer/ex-http-graphql
+# @voidoor/ex-http-graphql
 
 ```sh
 # 需要pnpm支持，通过
-npm install -g pnpm@7.29.3
+pnpm install -g pnpm@7.29.3
 # 安装
 
 # 在monorepo根目录执行
@@ -37,7 +37,7 @@ pnpm install
 # 安装monorepo root依赖
 
 # 然后执行
-pnpm --filter @data-farmer/ex-http-graphql install
+pnpm --filter @voidoor/ex-http-graphql install
 # 安装ex-http-graphql项目的依赖
 
 # 在monorepo根目录执行
@@ -49,13 +49,13 @@ docker build -t ex-http-graphql -f apps/ex-http-graphql/Dockerfile apps/ex-http-
 # 构建image镜像
 ```
 
-获取更多[@data-farmer/ex-http-graphql](./apps/ex-http-graphql/README.md) 的信息
+获取更多[@voidoor/ex-http-graphql](./apps/ex-http-graphql/README.md) 的信息
 
-# @data-farmer/ex-copy-static-asset-with-esbuild
+# @voidoor/ex-copy-static-asset-with-esbuild
 
 ```sh
 # 需要pnpm支持，通过
-npm install -g pnpm@7.29.3
+pnpm install -g pnpm@7.29.3
 # 安装
 
 # 在monorepo根目录执行
@@ -63,7 +63,7 @@ pnpm install
 # 安装monorepo root依赖
 
 # 然后执行
-pnpm --filter @data-farmer/ex-copy-static-asset-with-esbuild install
+pnpm --filter @voidoor/ex-copy-static-asset-with-esbuild install
 # 安装ex-copy-static-asset-with-esbuild项目的依赖
 
 # 在monorepo根目录执行
@@ -75,4 +75,4 @@ docker build -t ex-copy-static-asset-with-esbuild -f apps/ex-copy-static-asset-w
 # 构建image镜像
 ```
 
-获取更多[@data-farmer/ex-copy-static-asset-with-esbuild](./apps/ex-copy-static-asset-with-esbuild/README.md) 的信息
+获取更多[@voidoor/ex-copy-static-asset-with-esbuild](./apps/ex-copy-static-asset-with-esbuild/README.md) 的信息

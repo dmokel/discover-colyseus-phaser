@@ -1,4 +1,4 @@
-# @data-farmer/ex-http-graphql
+# @voidoor/ex-http-graphql
 
 example
 

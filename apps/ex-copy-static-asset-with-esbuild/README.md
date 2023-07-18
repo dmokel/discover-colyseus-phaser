@@ -1,4 +1,4 @@
-# @data-farmer/ex-copy-static-asset-with-esbuild
+# @voidoor/ex-copy-static-asset-with-esbuild
 
 copy static asset with esbuild
 

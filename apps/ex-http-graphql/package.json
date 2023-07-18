@@ -1,5 +1,5 @@
 {
-  "name": "@data-farmer/ex-http-graphql",
+  "name": "@voidoor/ex-http-graphql",
   "private": true,
   "version": "1.0.0",
   "author": "David Mokel",
@@ -10,7 +10,7 @@
     "debug": "rm -rf ./dist; ts-node ./scripts/debug.ts; pnpm run start"
   },
   "dependencies": {
-    "@data-farmer/utils": "workspace:^1.0.0",
+    "@voidoor/utils": "workspace:^1.0.0",
     "dotenv": "^16.0.3",
     "fastify": "^4.15.0",
     "graphql": "^16.6.0",

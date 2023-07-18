@@ -1,5 +1,5 @@
 import * as ordersEndpoints from ':api/endpoints/orders';
-import { sleep } from '@data-farmer/utils';
+import { sleep } from '@voidoor/utils';
 import { FastifyInstance } from 'fastify';
 
 export const routes = async (server: FastifyInstance) => {
