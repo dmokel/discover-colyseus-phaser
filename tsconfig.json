@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.options.json",
+  "files": [],
+  "references": [
+    {
+      "path": "packages/utils"
+    },
+    {
+      "path": "apps/ex-http-graphql"
+    },
+    {
+      "path": "apps/ex-copy-static-asset-with-esbuild"
+    }
+  ]
+}

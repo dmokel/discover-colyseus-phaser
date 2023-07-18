@@ -1,0 +1,11 @@
+dist/
+*.tsbuildinfo
+
+node_modules/
+
+.turbo/
+
+pnpm-lock.yaml
+
+nexus-typegen.ts
+schema.graphql

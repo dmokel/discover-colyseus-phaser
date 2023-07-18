@@ -1,0 +1,13 @@
+{
+  "extends": "../../tsconfig.options.json",
+  "compilerOptions": {
+    "emitDeclarationOnly": false,
+    "noEmit": true,
+    "lib": ["ESNext"],
+    "baseUrl": "./src",
+    "paths": {
+      ":api/*": ["api/*"]
+    }
+  },
+  "include": ["./src/**/*.ts"]
+}
