@@ -32,15 +32,19 @@ export class GameScene extends Phaser.Scene {
       this.room = await this.client.joinOrCreate('my_room');
 
       this.room.state.players.onAdd((player: any, sessionId: any) => {
-        console.log(`x:${player.x}, y:${player.y}`);
+        console.log(`player: ${JSON.stringify(player)}`);
         const entity = this.physics.add.image(player.x, player.y, 'ship_0001');
         this.playerEntities[sessionId] = entity;
 
+        // listening for server updates
         player.onChange(() => {
-          // update local position immediately
+          //
+          // do not update local position immediately
+          // we're going to LERP them during the render loop.
+          //
           console.log(`player: ${JSON.stringify(player)}`);
-          entity.x = player.x;
-          entity.y = player.y;
+          entity.setData('serverX', player.x);
+          entity.setData('serverY', player.y);
         });
       });
 
@@ -67,6 +71,15 @@ export class GameScene extends Phaser.Scene {
     this.inputPayload.up = this.cursorKeys.up.isDown;
     this.inputPayload.down = this.cursorKeys.down.isDown;
     this.room.send('0', this.inputPayload);
+
+    for (const sessionId in this.playerEntities) {
+      // interpolate all player entities
+      const entity = this.playerEntities[sessionId];
+      const { serverX, serverY } = entity.data.values;
+
+      entity.x = Phaser.Math.Linear(entity.x, serverX, 0.2);
+      entity.y = Phaser.Math.Linear(entity.y, serverY, 0.2);
+    }
   }
 }
 
