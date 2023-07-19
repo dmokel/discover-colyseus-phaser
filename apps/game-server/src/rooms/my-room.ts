@@ -8,6 +8,23 @@ export class MyRoom extends Room<MyRoomState> {
     this.onMessage('type', (client, message) => {
       console.log(`clientId: ${client.sessionId}, message: ${JSON.stringify(message)}`);
     });
+
+    this.onMessage(0, (client, data) => {
+      const player = this.state.players.get(client.sessionId);
+      const velocity = 2;
+
+      if (data.left) {
+        player.x -= velocity;
+      } else if (data.right) {
+        player.x += velocity;
+      }
+
+      if (data.up) {
+        player.y -= velocity;
+      } else if (data.down) {
+        player.y += velocity;
+      }
+    });
   }
 
   onJoin(client: Client, options: any) {
@@ -17,6 +34,7 @@ export class MyRoom extends Room<MyRoomState> {
     const mapHeight = 600;
 
     const player = new Player();
+    player.id = client.sessionId;
     player.x = Math.random() * mapWidth;
     player.y = Math.random() * mapHeight;
 
