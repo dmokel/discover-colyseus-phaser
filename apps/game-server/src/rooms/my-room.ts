@@ -2,6 +2,15 @@ import { Client, Room } from '@colyseus/core';
 import { MyRoomState, Player } from './schema/my-room-schema';
 
 export class MyRoom extends Room<MyRoomState> {
+  private elapsedTime: number;
+  private fixedTimeStep: number;
+
+  constructor() {
+    super();
+    this.elapsedTime = 0;
+    this.fixedTimeStep = 1000 / 60;
+  }
+
   onCreate() {
     this.setState(new MyRoomState());
 
@@ -11,18 +20,18 @@ export class MyRoom extends Room<MyRoomState> {
 
     this.onMessage(0, (client, data) => {
       const player = this.state.players.get(client.sessionId);
-      const velocity = 2;
+      //
+      // not handle the input data immediately
+      //
+      player.inputQueue.push(data);
+    });
 
-      if (data.left) {
-        player.x -= velocity;
-      } else if (data.right) {
-        player.x += velocity;
-      }
+    this.setSimulationInterval((deltaTime) => {
+      this.elapsedTime += deltaTime;
 
-      if (data.up) {
-        player.y -= velocity;
-      } else if (data.down) {
-        player.y += velocity;
+      while (this.elapsedTime >= this.fixedTimeStep) {
+        this.elapsedTime -= this.fixedTimeStep;
+        this.fixedTick(this.fixedTimeStep);
       }
     });
   }
@@ -48,5 +57,27 @@ export class MyRoom extends Room<MyRoomState> {
 
   onDispose() {
     console.log('room', this.roomId, 'disposing...');
+  }
+
+  fixedTick(deltaTime: number) {
+    const velocity = 2;
+
+    this.state.players.forEach((player) => {
+      let input: any;
+
+      while ((input = player.inputQueue.shift())) {
+        if (input.left) {
+          player.x -= velocity;
+        } else if (input.right) {
+          player.x += velocity;
+        }
+
+        if (input.up) {
+          player.y -= velocity;
+        } else if (input.down) {
+          player.y += velocity;
+        }
+      }
+    });
   }
 }

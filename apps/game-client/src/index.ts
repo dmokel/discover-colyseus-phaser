@@ -14,10 +14,16 @@ export class GameScene extends Phaser.Scene {
   private inputPayload: { left: boolean; right: boolean; up: boolean; down: boolean };
   private cursorKeys!: Phaser.Types.Input.Keyboard.CursorKeys;
 
+  private elapsedTime: number;
+  private fixedTimeStep: number;
+
   constructor() {
     super('main');
     this.playerEntities = {};
     this.inputPayload = { left: false, right: false, up: false, down: false };
+
+    this.elapsedTime = 0;
+    this.fixedTimeStep = 1000 / 60;
   }
 
   preload() {
@@ -83,8 +89,7 @@ export class GameScene extends Phaser.Scene {
     }
   }
 
-  update(time: number, delta: number): void {
-    // game loop
+  fixedTick(time: number, delta: number) {
     if (!this.room) return;
 
     this.inputPayload.left = this.cursorKeys.left.isDown;
@@ -118,6 +123,26 @@ export class GameScene extends Phaser.Scene {
 
       entity.x = Phaser.Math.Linear(entity.x, serverX, 0.2);
       entity.y = Phaser.Math.Linear(entity.y, serverY, 0.2);
+    }
+  }
+
+  update(time: number, delta: number): void {
+    // game loop
+    //
+    // It is more practical and simple to understand “ticks per second”
+    // than “milliseconds per frame” when dealing with determinism.
+    // https://learn.colyseus.io/phaser/4-fixed-tickrate.html#fixed-tick-rate
+    //
+    // during the update() loop, we are going to allow having multiple ticks on a single frame, if needed.
+    //
+
+    // skip loop if not connected yet.
+    if (!this.currentPlayer) return;
+
+    this.elapsedTime += delta;
+    while (this.elapsedTime >= this.fixedTimeStep) {
+      this.elapsedTime -= this.fixedTimeStep;
+      this.fixedTick(time, this.fixedTimeStep);
     }
   }
 }
