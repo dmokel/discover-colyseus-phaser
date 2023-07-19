@@ -7,6 +7,10 @@ export class GameScene extends Phaser.Scene {
   private room!: Room;
 
   private playerEntities: { [sessionId: string]: Phaser.Types.Physics.Arcade.ImageWithDynamicBody };
+
+  private currentPlayer!: Phaser.Types.Physics.Arcade.ImageWithDynamicBody;
+  private remoteRef!: Phaser.GameObjects.Rectangle;
+
   private inputPayload: { left: boolean; right: boolean; up: boolean; down: boolean };
   private cursorKeys!: Phaser.Types.Input.Keyboard.CursorKeys;
 
@@ -32,20 +36,37 @@ export class GameScene extends Phaser.Scene {
       this.room = await this.client.joinOrCreate('my_room');
 
       this.room.state.players.onAdd((player: any, sessionId: any) => {
-        console.log(`player: ${JSON.stringify(player)}`);
         const entity = this.physics.add.image(player.x, player.y, 'ship_0001');
         this.playerEntities[sessionId] = entity;
 
-        // listening for server updates
-        player.onChange(() => {
+        if (sessionId === this.room.sessionId) {
+          // this is the current player!
+          // (we are going to treat it differently during the update loop)
+          this.currentPlayer = entity;
+
+          // remoteRef is being used for debug only
+          this.remoteRef = this.add.rectangle(0, 0, entity.width, entity.height);
+          this.remoteRef.setStrokeStyle(1, 0xff0000);
+
+          player.onChange(() => {
+            this.remoteRef.x = player.x;
+            this.remoteRef.y = player.y;
+          });
+        } else {
           //
-          // do not update local position immediately
-          // we're going to LERP them during the render loop.
+          // all remote players are here!
+          // (same as before, we are going to interpolate remote players)
           //
-          console.log(`player: ${JSON.stringify(player)}`);
-          entity.setData('serverX', player.x);
-          entity.setData('serverY', player.y);
-        });
+          // listening for server updates
+          player.onChange(() => {
+            //
+            // do not update local position immediately
+            // we're going to LERP them during the render loop.
+            //
+            entity.setData('serverX', player.x);
+            entity.setData('serverY', player.y);
+          });
+        }
       });
 
       this.room.state.players.onRemove((player: any, sessionId: any) => {
@@ -72,8 +93,26 @@ export class GameScene extends Phaser.Scene {
     this.inputPayload.down = this.cursorKeys.down.isDown;
     this.room.send('0', this.inputPayload);
 
+    const velocity = 2;
+    if (this.inputPayload.left) {
+      this.currentPlayer.x -= velocity;
+    } else if (this.inputPayload.right) {
+      this.currentPlayer.x += velocity;
+    }
+
+    if (this.inputPayload.up) {
+      this.currentPlayer.y -= velocity;
+    } else if (this.inputPayload.down) {
+      this.currentPlayer.y += velocity;
+    }
+
     for (const sessionId in this.playerEntities) {
-      // interpolate all player entities
+      // do not interpolate the current player
+      if (sessionId === this.room.sessionId) {
+        continue;
+      }
+
+      // interpolate all other player entities
       const entity = this.playerEntities[sessionId];
       const { serverX, serverY } = entity.data.values;
 
