@@ -1,5 +1,5 @@
 import { Client, Room } from '@colyseus/core';
-import { MyRoomState, Player } from './schema/my-room-schema';
+import { InputData, MyRoomState, Player } from './schema/my-room-schema';
 
 export class MyRoom extends Room<MyRoomState> {
   private elapsedTime: number;
@@ -11,7 +11,7 @@ export class MyRoom extends Room<MyRoomState> {
     this.fixedTimeStep = 1000 / 60;
   }
 
-  onCreate() {
+  onCreate(options: any) {
     this.setState(new MyRoomState());
 
     this.onMessage('type', (client, message) => {
@@ -36,7 +36,7 @@ export class MyRoom extends Room<MyRoomState> {
     });
   }
 
-  onJoin(client: Client, options: any) {
+  onJoin(client: Client, options: any, auth: any) {
     console.log(client.sessionId, 'joined!');
 
     const mapWidth = 800;
@@ -63,7 +63,7 @@ export class MyRoom extends Room<MyRoomState> {
     const velocity = 2;
 
     this.state.players.forEach((player) => {
-      let input: any;
+      let input: InputData;
 
       while ((input = player.inputQueue.shift())) {
         if (input.left) {
@@ -77,6 +77,8 @@ export class MyRoom extends Room<MyRoomState> {
         } else if (input.down) {
           player.y += velocity;
         }
+
+        player.tick = input.tick;
       }
     });
   }
