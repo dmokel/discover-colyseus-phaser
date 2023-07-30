@@ -37,11 +37,11 @@ pnpm install
 # 安装monorepo root依赖
 
 # 然后执行
-pnpm --filter @voidoor/ex-http-graphql install
+pnpm ex-http-graphql install
 # 安装ex-http-graphql项目的依赖
 
 # 在monorepo根目录执行
-pnpm run ex-http-graphql:build
+pnpm ex-http-graphql build
 # 构建js产物
 
 # 继续在monorepo根目录执行
@@ -63,11 +63,11 @@ pnpm install
 # 安装monorepo root依赖
 
 # 然后执行
-pnpm --filter @voidoor/ex-copy-static-asset-with-esbuild install
+pnpm ex-copy-static-asset-with-esbuild install
 # 安装ex-copy-static-asset-with-esbuild项目的依赖
 
 # 在monorepo根目录执行
-pnpm run ex-copy-static-asset-with-esbuild:build
+pnpm ex-copy-static-asset-with-esbuild build
 # 构建js产物
 
 # 继续在monorepo根目录执行
@@ -76,3 +76,5 @@ docker build -t ex-copy-static-asset-with-esbuild -f apps/ex-copy-static-asset-w
 ```
 
 获取更多[@voidoor/ex-copy-static-asset-with-esbuild](./apps/ex-copy-static-asset-with-esbuild/README.md) 的信息
+
+TODO 通过 pnpm ex-copy-static-asset-with-esbuild install 依赖时，会出现无法正确安装 app 的所有依赖的情况，具体案例为，初始化一个 nuxt 项目，然后在 root 目录以上述方式安装 nuxt 项目的依赖存在问题，未完整安装所有依赖，可能是配置的问题，也可能你是 npm script 的问题；需要进入到对应的 app 下执行 pnpm install 即可完整正确安装所有依赖。
