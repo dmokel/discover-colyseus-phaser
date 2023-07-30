@@ -4,8 +4,8 @@ import World from './scenes/world';
 
 const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
-  width: 800,
-  height: 640,
+  width: window.innerWidth,
+  height: window.innerHeight + 300,
   physics: {
     default: 'arcade',
     arcade: {

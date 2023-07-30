@@ -4,5 +4,6 @@ enum TextureKeys {
   Office = 'office',
   Basement = 'basement',
   Generic = 'generic',
+  Chairs = 'chairs',
 }
 export { TextureKeys };
