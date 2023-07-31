@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { createPlayerAnims } from '../anims/playeranims';
 import { SceneKeys } from '../constants/scenekeys';
 import { TextureKeys } from '../constants/texturekeys';
 import { Chair } from '../props/chair';
@@ -11,6 +12,8 @@ export default class World extends Phaser.Scene {
   }
 
   create() {
+    createPlayerAnims(this.anims);
+
     this.map = this.make.tilemap({ key: TextureKeys.TileMap });
 
     // groundLayer with FloorAndGround

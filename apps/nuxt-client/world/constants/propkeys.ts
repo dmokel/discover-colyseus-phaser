@@ -1,8 +1,8 @@
 enum PropKeys {
-  CHAIR,
-  COMPUTER,
-  WHITEBOARD,
-  VENDINGMACHINE,
+  Chair,
+  Computer,
+  Whiteboard,
+  Vendingmachine,
 }
 
 export { PropKeys };
