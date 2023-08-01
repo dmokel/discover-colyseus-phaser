@@ -11,6 +11,9 @@
           <li>
             <NuxtLink to="/game">游戏</NuxtLink>
           </li>
+          <li>
+            <NuxtLink to="/vue-tutorial">Vue Tutorial</NuxtLink>
+          </li>
         </ul>
       </nav>
     </header>
