@@ -14,10 +14,17 @@ class Player extends Phaser.Physics.Arcade.Sprite {
   playerName: Phaser.GameObjects.Text;
   playerContainer: Phaser.GameObjects.Container;
 
-  constructor(scene: Phaser.Scene, x: number, y: number, texture: TextureKeys, id: string, frame?: string | number) {
+  constructor(
+    scene: Phaser.Scene,
+    x: number,
+    y: number,
+    texture: TextureKeys,
+    playerId: string,
+    frame?: string | number
+  ) {
     super(scene, x, y, texture, frame);
 
-    this.playerId = id;
+    this.playerId = playerId;
     this.playerTexture = texture;
 
     this.setDepth(this.y);

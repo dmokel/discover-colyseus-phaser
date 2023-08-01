@@ -29,6 +29,7 @@ export default class Preloader extends Phaser.Scene {
       frameHeight: 32,
     });
 
+    // character sprite sheet
     this.load.spritesheet(TextureKeys.Adam, 'character/adam.png', {
       frameWidth: 32,
       frameHeight: 48,
