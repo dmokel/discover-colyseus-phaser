@@ -1,3 +1,9 @@
+<script setup lang="ts">
+definePageMeta({
+  layout: false,
+});
+</script>
+
 <template>
   <div>
     <ClientOnly>
@@ -5,7 +11,5 @@
     </ClientOnly>
   </div>
 </template>
-
-<script setup lang="ts"></script>
 
 <style scoped></style>
