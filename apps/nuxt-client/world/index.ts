@@ -5,8 +5,11 @@ import World from './scenes/world';
 class PhaserController {
   private static singleton: PhaserController;
 
+  private config: Phaser.Types.Core.GameConfig;
+
   constructor() {
     /** empty */
+    this.config = {};
   }
 
   private async init() {
@@ -24,7 +27,7 @@ class PhaserController {
   startWorld(container: HTMLElement) {
     if (!container) throw new Error('you should provide a container used to render Phaser');
 
-    const config: Phaser.Types.Core.GameConfig = {
+    this.config = {
       type: Phaser.AUTO,
       width: window.innerWidth,
       height: window.innerHeight + 300,
@@ -36,9 +39,15 @@ class PhaserController {
       },
       scene: [Preloader, World],
     };
-    config.parent = container;
+    this.config.parent = container;
 
-    return new Phaser.Game(config);
+    return new Phaser.Game(this.config);
+  }
+
+  // update game size when window changed
+  updateOnWindowChange() {
+    this.config.width = window.innerWidth;
+    this.config.height = window.innerHeight + 300;
   }
 }
 
