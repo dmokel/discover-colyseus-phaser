@@ -14,7 +14,13 @@
     "nuxt": "^3.6.5"
   },
   "dependencies": {
+<<<<<<< Updated upstream
     "phaser": "^3.60.0",
     "sass": "^1.64.2"
+=======
+    "@voidoor/api-types": "workspace:^1.0.0",
+    "colyseus.js": "^0.15.10",
+    "phaser": "^3.60.0"
+>>>>>>> Stashed changes
   }
 }

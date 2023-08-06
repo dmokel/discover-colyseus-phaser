@@ -9,9 +9,10 @@
     "typecheck": "turbo run typecheck",
     "ex-http-graphql": "pnpm --filter @voidoor/ex-http-graphql",
     "ex-copy-static-asset-with-esbuild": "pnpm --filter @voidoor/ex-copy-static-asset-with-esbuild",
-    "game-clint": "pnpm --filter @voidoor/game-client",
+    "game-client": "pnpm --filter @voidoor/game-client",
     "nuxt-client": "pnpm --filter @voidoor/nuxt-client",
     "game-server": "pnpm --filter @voidoor/game-server",
+    "api-types": "pnpm --filter @voidoor/api-types",
     "prepare": "husky install",
     "cz": "cz"
   },

@@ -1,7 +1,7 @@
 import { Client, Room } from '@colyseus/core';
-import { InputData, MyRoomState, Player } from './schema/my-room-schema';
+import { MyRoomState } from '@voidoor/api-types';
 
-export class MyRoom extends Room<MyRoomState> {
+export class MyRoom extends Room<MyRoomState.State> {
   private elapsedTime: number;
   private fixedTimeStep: number;
 
@@ -12,7 +12,7 @@ export class MyRoom extends Room<MyRoomState> {
   }
 
   onCreate(options: any) {
-    this.setState(new MyRoomState());
+    this.setState(new MyRoomState.State());
 
     this.onMessage('type', (client, message) => {
       console.log(`clientId: ${client.sessionId}, message: ${JSON.stringify(message)}`);
@@ -42,7 +42,7 @@ export class MyRoom extends Room<MyRoomState> {
     const mapWidth = 800;
     const mapHeight = 600;
 
-    const player = new Player();
+    const player = new MyRoomState.Player();
     player.id = client.sessionId;
     player.x = Math.random() * mapWidth;
     player.y = Math.random() * mapHeight;
@@ -63,7 +63,7 @@ export class MyRoom extends Room<MyRoomState> {
     const velocity = 2;
 
     this.state.players.forEach((player) => {
-      let input: InputData;
+      let input: MyRoomState.InputData;
 
       while ((input = player.inputQueue.shift())) {
         if (input.left) {

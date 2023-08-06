@@ -1,9 +1,10 @@
+import { MyRoomState } from '@voidoor/api-types';
 import { Client, Room } from 'colyseus.js';
 import Phaser from 'phaser';
 
 // custom scene class
 export class GameScene extends Phaser.Scene {
-  private room!: Room;
+  private room!: Room<MyRoomState.State>;
   private debugFPS!: Phaser.GameObjects.Text;
 
   private playerEntities: { [sessionId: string]: Phaser.Types.Physics.Arcade.ImageWithDynamicBody };
@@ -129,7 +130,11 @@ export class GameScene extends Phaser.Scene {
   fixedTick(time: number, delta: number) {
     this.currentTick++;
 
-    const ticksBehind = this.currentTick - this.room.state.players.get(this.room.sessionId).tick;
+    const playerRef = this.room.state.players.get(this.room.sessionId);
+    if (!playerRef) {
+      throw new Error('invalid sessionId');
+    }
+    const ticksBehind = this.currentTick - playerRef.tick;
     console.log({ ticksBehind });
 
     this.inputPayload.left = this.cursorKeys.left.isDown;

@@ -1,6 +1,6 @@
 import { MapSchema, Schema, type } from '@colyseus/schema';
 
-export interface InputData {
+interface InputData {
   left: boolean;
   right: boolean;
   up: boolean;
@@ -8,7 +8,7 @@ export interface InputData {
   tick: number;
 }
 
-export class Player extends Schema {
+class Player extends Schema {
   @type('string') id: string;
   @type('number') x: number;
   @type('number') y: number;
@@ -17,7 +17,9 @@ export class Player extends Schema {
   inputQueue: InputData[] = [];
 }
 
-export class MyRoomState extends Schema {
+class State extends Schema {
   @type('string') mySynchronizedProperty = 'Hello World';
   @type({ map: Player }) players = new MapSchema<Player>();
 }
+
+export { InputData, Player, State };

@@ -10,6 +10,7 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "resolveJsonModule": true,
-    "strict": true
+    // "strict": true, // ncompatible with @colyseus/schema
+    "experimentalDecorators": true
   }
 }
