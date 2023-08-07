@@ -2,11 +2,19 @@ import Phaser from 'phaser';
 import { PlayerBehavior } from '../constants/playerbehavior';
 import { TextureKeys } from '../constants/texturekeys';
 
+// shifting distance for sitting animation format: direction: [xShift, yShift, depthShift]
+const sittingShiftData = {
+  up: [0, 3, -10],
+  down: [0, 3, 1],
+  left: [0, -8, 10],
+  right: [0, -8, 10],
+};
+
 class Player extends Phaser.Physics.Arcade.Sprite {
   private playerDialogBubble: Phaser.GameObjects.Container;
   private timeoutId?: number;
 
-  playerId: string;
+  playerId: string; // client.sessionId
   playerTexture: TextureKeys;
   playerBehavior = PlayerBehavior.Idle;
   readyToConnect = false;
@@ -99,4 +107,4 @@ class Player extends Phaser.Physics.Arcade.Sprite {
   }
 }
 
-export { Player };
+export { Player, sittingShiftData };

@@ -11,7 +11,7 @@ let latencySimulationMs = 0;
 
 const cfg = config({
   options: {
-    devMode: true,
+    devMode: false,
   },
 
   initializeGameServer: (gameServer) => {

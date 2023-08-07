@@ -1,19 +1,30 @@
+import { WeddingSpaceRoomState } from '@voidoor/api-types';
 import Phaser from 'phaser';
 import { createPlayerAnims } from '../anims/playeranims';
 import { SceneKeys } from '../constants/scenekeys';
 import { TextureKeys } from '../constants/texturekeys';
+import '../players/my-player';
 import { MyPlayer } from '../players/my-player';
+import '../players/other-player';
+import { OtherPlayer } from '../players/other-player';
 import { Chair } from '../props/chair';
+import { Network } from '../services/network';
 import { Keyboard, NavKeys } from '../types/keyboard-state';
 
 export default class World extends Phaser.Scene {
   private map!: Phaser.Tilemaps.Tilemap;
   private cursors!: NavKeys;
 
+  network!: Network;
   myPlayer!: MyPlayer;
+
+  private otherPlayers!: Phaser.Physics.Arcade.Group;
+  private otherPlayerMap = new Map<string, OtherPlayer>();
 
   constructor() {
     super(SceneKeys.World);
+
+    this.network = new Network();
   }
 
   registerKeys() {
@@ -48,16 +59,7 @@ export default class World extends Phaser.Scene {
     this.map = this.make.tilemap({ key: TextureKeys.TileMap });
 
     // add my player into scene, and enable it's physics dynamic body
-    this.myPlayer = new MyPlayer(this, 705, 500, TextureKeys.Adam, 'tempId');
-    this.physics.world.enableBody(this.myPlayer, Phaser.Physics.Arcade.DYNAMIC_BODY);
-    if (!this.myPlayer.body) {
-      throw new Error('null my player body');
-    }
-    const collisionScale = [0.5, 0.2];
-    this.myPlayer.body
-      .setSize(this.myPlayer.width * collisionScale[0], this.myPlayer.height * collisionScale[1])
-      .setOffset(this.myPlayer.width * (1 - collisionScale[0]) * 0.5, this.myPlayer.height * (1 - collisionScale[1]));
-    this.add.existing(this.myPlayer);
+    this.myPlayer = this.add.myPlayer(705, 500, TextureKeys.Adam, this.network.mySessionId);
 
     // groundLayer with FloorAndGround
     const FloorAndGround = this.map.addTilesetImage('FloorAndGround', TextureKeys.TilesWall);
@@ -89,6 +91,8 @@ export default class World extends Phaser.Scene {
     this.addGroupFromTiled('GenericObjectsOnCollide', TextureKeys.Generic, 'Generic', true);
     this.addGroupFromTiled('Basement', TextureKeys.Basement, 'Basement', true);
 
+    this.otherPlayers = this.physics.add.group({ classType: OtherPlayer });
+
     this.cameras.main.zoom = 1.5;
     this.cameras.main.startFollow(this.myPlayer, true);
 
@@ -96,6 +100,10 @@ export default class World extends Phaser.Scene {
 
     this.registerKeys();
     this.enableKeys();
+
+    this.network.onPlayerJoined(this.handlePlayerJoined, this);
+    this.network.onPlayerLeft(this.handlePlayerLeft, this);
+    this.network.onPlayerUpdated(this.handlePlayerUpdated, this);
   }
 
   private addObjectFromTiled(
@@ -149,9 +157,34 @@ export default class World extends Phaser.Scene {
     });
   }
 
+  // function to add new player to the otherPlayer group
+  private handlePlayerJoined(newPlayer: WeddingSpaceRoomState.Player, sessionId: string) {
+    const otherPlayer = this.add.otherPlayer(newPlayer.x, newPlayer.y, TextureKeys.Adam, sessionId, newPlayer.name);
+    this.otherPlayers.add(otherPlayer);
+    this.otherPlayerMap.set(sessionId, otherPlayer);
+  }
+
+  // function to remove the player who left from the otherPlayer group
+  private handlePlayerLeft(sessionId: string) {
+    if (this.otherPlayerMap.has(sessionId)) {
+      const otherPlayer = this.otherPlayerMap.get(sessionId);
+      if (!otherPlayer) return;
+      console.log('otherPlayer:', JSON.stringify(otherPlayer));
+      this.otherPlayers.remove(otherPlayer, true, true);
+      this.otherPlayerMap.delete(sessionId);
+      // otherPlayer.destroy(true);
+    }
+  }
+
+  // function to update target position upon receiving player updates
+  private handlePlayerUpdated(field: string, value: number | string, sessionId: string) {
+    const otherPlayer = this.otherPlayerMap.get(sessionId);
+    otherPlayer?.updateOtherPlayer(field, value);
+  }
+
   update(t: number, dt: number) {
-    if (this.myPlayer) {
-      this.myPlayer.update(this.cursors);
+    if (this.myPlayer && this.network) {
+      this.myPlayer.update(this.cursors, this.network);
     }
   }
 }
